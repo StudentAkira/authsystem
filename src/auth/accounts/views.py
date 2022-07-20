@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from accounts.models import Profile
 from .serializers import CustomUserSerializer
 
 
@@ -46,6 +48,25 @@ class LogoutView(APIView):
         return redirect('/login/')
 
 
-class MainView(APIView):
+class EditProfileView(APIView):
+    def get(self, requests):
+        return render(request=requests, template_name='editprofile/editprofile.html')
+
+    def put(self, request):
+        print(request.PUT.dict())
+        return Response({'pass': request.PUT.dict()})
+
+
+class MainView(APIView):#only returns user`s data
     def get(self, request):
-        return render(request=request, template_name='main/main.html', context={'username': request.user.username})
+        user = request.user
+        profile = Profile.objects.filter(user=user).get()
+        username = user.username
+        status = profile.status
+        description = profile.description
+        return render(request=request,
+                      template_name='main/main.html',
+                      context={'username': username,
+                               'status': status,
+                               'description': description,
+                               })

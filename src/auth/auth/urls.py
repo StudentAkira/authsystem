@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from accounts.views import RegistrateView, LoginView, LogoutView, MainView
+from accounts.views import RegistrateView, LoginView, LogoutView, MainView, EditProfileView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,7 +25,8 @@ urlpatterns = [
     path('registrate/', RegistrateView.as_view()),
     path('login/', LoginView.as_view()),
     path('logout/', LogoutView.as_view()),
-    path('drf/', include('rest_framework.urls')),
     path('', include('social_django.urls')),
+
+    path('editprofile/', EditProfileView.as_view()),
     path('main/', MainView.as_view())
 ]

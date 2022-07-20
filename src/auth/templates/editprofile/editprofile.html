@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit your profile</title>
+</head>
+<body>
+    <h1>Edit your profile now</h1>
+    <form action="" method="PUT">
+         {% csrf_token %}
+         Status : <input name="status" value="some status"><br>
+         Description : <input name="'description"><br>
+         <button type="submit">Edit profile</button>
+     </form><br>
+</body>
+</html>
