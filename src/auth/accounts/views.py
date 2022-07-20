@@ -4,8 +4,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from accounts.models import CustomUser
+from .serializers import CustomUserSerializer
 
 
 class RegistrateView(APIView):
@@ -14,10 +13,16 @@ class RegistrateView(APIView):
         return render(request=request, template_name='registrate/registrate.html')
 
     def post(self, request):
-        username = request.POST.dict()['username']
-        password = request.POST.dict()['password']
-        user = CustomUser.objects.create_user(username, password)
-        return Response({'username': user.username, 'password': user.password})
+        data = {
+            'username': request.POST.dict()['username'],
+            'password': request.POST.dict()['password'],
+        }
+        userserializer = CustomUserSerializer(data=data)
+        if userserializer.is_valid():
+            validated_data = userserializer.validated_data
+            user = userserializer.create(validated_data=userserializer.validated_data)
+            return redirect('/login/')
+        return redirect('/registrate/')
 
 
 class LoginView(APIView):
@@ -28,9 +33,11 @@ class LoginView(APIView):
     def post(self, request):
         username = request.POST.dict()['username']
         password = request.POST.dict()['password']
-        user = authenticate(request=request, username=username, password=password, )
-        login(request=request, user=user)
-        return Response({'user': user.username, 'password': user.password})
+        user = authenticate(request=request, username=username, password=password,)
+        if user:
+            login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('/main/')
+        return redirect('/login/')
 
 
 class LogoutView(APIView):
