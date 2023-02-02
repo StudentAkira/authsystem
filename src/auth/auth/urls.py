@@ -27,6 +27,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view()),
     path('', include('social_django.urls')),
 
-    path('editprofile/', EditProfileView.as_view()),
     path('main/', MainView.as_view())
 ]
